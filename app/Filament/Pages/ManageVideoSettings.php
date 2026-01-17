@@ -22,42 +22,42 @@ class ManageVideoSettings extends SettingsPage
     {
         return $form
             ->schema([
-                Section::make('Video Model Pricing')
-                    ->description('Set credit costs for different video tiers')
+                Section::make(__('Video Model Pricing'))
+                    ->description(__('Set credit costs for different video tiers'))
                     ->schema([
                         TextInput::make('price_social_short')
-                            ->label('Social Short Cost')
+                            ->label(__('Social Short Cost'))
                             ->numeric()
                             ->default(50)
-                            ->suffix('Credits'),
+                            ->suffix(__('Credits')),
                         TextInput::make('price_pro_hd')
-                            ->label('Pro HD Cost')
+                            ->label(__('Pro HD Cost'))
                             ->numeric()
                             ->default(150)
-                            ->suffix('Credits'),
+                            ->suffix(__('Credits')),
                         TextInput::make('price_avatar_selling')
-                            ->label('Avatar Selling Cost')
+                            ->label(__('Avatar Selling Cost'))
                             ->numeric()
                             ->default(300)
-                            ->suffix('Credits'),
+                            ->suffix(__('Credits')),
                     ])->columns(3),
 
-                Section::make('Preferred Providers')
-                    ->description('Choose which AI models handle logic and production')
+                Section::make(__('Preferred Providers'))
+                    ->description(__('Choose which AI models handle logic and production'))
                     ->schema([
                         Select::make('scripting_model')
                             ->options([
-                                'gpt-4o' => 'GPT-4o (High Quality)',
-                                'gpt-4o-mini' => 'GPT-4o Mini (Fast & Cheap)',
+                                'gpt-4o' => __('GPT-4o (High Quality)'),
+                                'gpt-4o-mini' => __('GPT-4o Mini (Fast & Cheap)'),
                             ])
                             ->default('gpt-4o')
                             ->required()
                             ->native(false),
                         Select::make('video_provider')
                             ->options([
-                                'kling' => 'Kling AI',
-                                'luma' => 'Luma Dream Machine',
-                                'runway' => 'Runway Gen-3',
+                                'kling' => __('Kling AI'),
+                                'luma' => __('Luma Dream Machine'),
+                                'runway' => __('Runway Gen-3'),
                             ])
                             ->required()
                             ->native(false),

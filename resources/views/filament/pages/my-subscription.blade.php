@@ -2,33 +2,33 @@
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-lg font-medium text-gray-500 dark:text-gray-400">Available Credits</h2>
+            <h2 class="text-lg font-medium text-gray-500 dark:text-gray-400">{{ __('Available Credits') }}</h2>
             <div class="mt-4 flex items-baseline">
                 <span class="text-4xl font-extrabold text-primary-600 dark:text-primary-400">
                     {{ $user->credits }}
                 </span>
-                <span class="ml-2 text-gray-500">Credits</span>
+                <span class="ml-2 text-gray-500">{{ __('Credits') }}</span>
             </div>
             <p class="mt-2 text-sm text-gray-400">
-                1 Credit = 1 AI Post or 1 Video Script.
+                {{ __('Credits will be deducted when generating AI content.') }}
             </p>
         </div>
 
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-lg font-medium text-gray-500 dark:text-gray-400">Current Plan</h2>
+            <h2 class="text-lg font-medium text-gray-500 dark:text-gray-400">{{ __('Current Plan') }}</h2>
             <div class="mt-4">
                 <span class="text-3xl font-bold text-gray-900 dark:text-white">
-                    {{ $currentPlan ? $currentPlan->name : 'Free Trial' }}
+                    {{ $currentPlan ? $currentPlan->name : __('Free Trial') }}
                 </span>
             </div>
             <div class="mt-4">
                 @if($currentPlan)
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Active
+                        {{ __('Active') }}
                     </span>
                 @else
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        No Plan
+                        {{ __('No Plan') }}
                     </span>
                 @endif
             </div>
@@ -37,10 +37,10 @@
 
     <x-filament::section>
         <x-slot name="heading">
-            Upgrade Plan
+            {{ __('Upgrade Plan') }}
         </x-slot>
         <x-slot name="description">
-            Choose a plan to get more credits monthly.
+            {{ __('Choose a plan to get more credits monthly.') }}
         </x-slot>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
@@ -53,7 +53,7 @@
                         <span class="ml-1 text-xl font-semibold text-gray-500">/mo</span>
                     </div>
                     <p class="mt-4 text-primary-600 font-medium">
-                        +{{ $plan->monthly_credits }} Credits / month
+                        +{{ $plan->monthly_credits }} {{ __('Credits') }} / month
                     </p>
 
                     <ul role="list" class="mt-6 space-y-4">
@@ -74,7 +74,7 @@
                 
                 <div class="mt-8">
                    <x-filament::button class="w-full" wire:click="mountAction('upgrade', { plan_id: {{ $plan->id }} })">
-                        Select {{ $plan->name }}
+                        {{ __('Select {plan}', ['plan' => $plan->name]) }}
                    </x-filament::button>
                 </div>
             </div>

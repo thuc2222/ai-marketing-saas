@@ -24,7 +24,7 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('User Details')
+                Forms\Components\Section::make(__('User Details'))
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -42,19 +42,19 @@ class UserResource extends Resource
                         // Phân quyền
                         Forms\Components\Select::make('role')
                             ->options([
-                                'user' => 'Customer',
-                                'admin' => 'Administrator',
+                                'user' => __('Customer'),
+                                'admin' => __('Administrator'),
                             ])
                             ->default('user')
                             ->required(),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Subscription & Credits')
+                Forms\Components\Section::make(__('Subscription & Credits'))
                     ->schema([
                         // Chọn gói cước
                         Forms\Components\Select::make('subscription_plan_id')
                             ->relationship('subscriptionPlan', 'name')
-                            ->label('Current Plan')
+                            ->label(__('Current Plan'))
                             ->searchable()
                             ->preload(),
 
@@ -62,11 +62,11 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('credits')
                             ->numeric()
                             ->default(0)
-                            ->label('Available Credits')
-                            ->helperText('Credits will be deducted when generating AI content.'),
+                            ->label(__('Available Credits'))
+                            ->helperText(__('Credits will be deducted when generating AI content.')),
                             
                         Forms\Components\DateTimePicker::make('subscription_expires_at')
-                            ->label('Plan Expiry Date'),
+                            ->label(__('Plan Expiry Date')),
                     ])->columns(3),
             ]);
     }
@@ -77,7 +77,7 @@ class UserResource extends Resource
             ->columns([
                 // Avatar + Tên
                 Tables\Columns\ImageColumn::make('avatar_url')
-                    ->label('Avatar')
+                    ->label(__('Avatar'))
                     ->circular()
                     ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl()), // Dùng hàm avatar custom
 
@@ -95,10 +95,10 @@ class UserResource extends Resource
 
                 // Hiển thị Gói cước
                 Tables\Columns\TextColumn::make('subscriptionPlan.name')
-                    ->label('Plan')
+                    ->label(__('Plan'))
                     ->badge()
                     ->color('info')
-                    ->placeholder('Free User'),
+                    ->placeholder(__('Free User')),
 
                 Tables\Columns\TextColumn::make('role')
                     ->badge()
@@ -113,14 +113,14 @@ class UserResource extends Resource
             ->filters([
                 // Lọc theo gói cước
                 Tables\Filters\SelectFilter::make('subscription_plan_id')
-                    ->label('Filter by Plan')
+                    ->label(__('Filter by Plan'))
                     ->relationship('subscriptionPlan', 'name'),
                     
                 // Lọc Admin/User
                 Tables\Filters\SelectFilter::make('role')
                     ->options([
-                        'user' => 'Customer',
-                        'admin' => 'Administrator',
+                        'user' => __('Customer'),
+                        'admin' => __('Administrator'),
                     ]),
             ])
             ->actions([
@@ -128,12 +128,12 @@ class UserResource extends Resource
                 
                 // ACTION: CỘNG TIỀN NHANH (Add Credits)
                 Action::make('add_credits')
-                    ->label('Add Credits')
+                    ->label(__('Add Credits'))
                     ->icon('heroicon-o-plus-circle')
                     ->color('success')
                     ->form([
                         Forms\Components\TextInput::make('amount')
-                            ->label('Amount to add')
+                            ->label(__('Amount to add'))
                             ->numeric()
                             ->required()
                             ->default(10)
@@ -143,8 +143,8 @@ class UserResource extends Resource
                         $record->increment('credits', $data['amount']);
                         
                         Notification::make()
-                            ->title('Credits Added')
-                            ->body("Added {$data['amount']} credits to {$record->name}")
+                            ->title(__('Credits Added'))
+                            ->body(__('Added {amount} credits to {name}', ['amount' => $data['amount'], 'name' => $record->name]))
                             ->success()
                             ->send();
                     }),

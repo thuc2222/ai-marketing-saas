@@ -46,7 +46,11 @@ class MarketingPlanResource extends Resource
                             Forms\Components\TextInput::make('name')->required()->columnSpanFull(),
                             Forms\Components\Grid::make(2)->schema([
                                 Forms\Components\Select::make('campaign_goal')
-                                    ->options(['awareness'=>'Awareness','conversion'=>'Sales','traffic'=>'Traffic'])
+                                    ->options([
+                                        'awareness' => __('Awareness'),
+                                        'conversion' => __('Sales'),
+                                        'traffic' => __('Traffic')
+                                    ])
                                     ->required(),
                                 Forms\Components\TextInput::make('brand_voice'),
                             ]),
@@ -70,26 +74,26 @@ class MarketingPlanResource extends Resource
                         ->label(__('Omni-channel'))
                         ->icon('heroicon-o-share')
                         ->schema([
-                            Forms\Components\Section::make('Channel Mix')
+                            Forms\Components\Section::make(__('Channel Mix'))
                                 ->schema([
                                     Forms\Components\CheckboxList::make('channels')
                                         ->label(__('Select Channels'))
                                         ->options([
-                                            'facebook' => 'Facebook / Meta',
-                                            'tiktok' => 'TikTok (Video)',
-                                            'website' => 'Website Blog (SEO)',
-                                            'email' => 'Email Newsletter',
-                                            'offline' => 'Offline / POSM',
+                                            'facebook' => __('Facebook / Meta'),
+                                            'tiktok' => __('TikTok (Video)'),
+                                            'website' => __('Website Blog (SEO)'),
+                                            'email' => __('Email Newsletter'),
+                                            'offline' => __('Offline / POSM'),
                                         ])
                                         ->columns(3)
                                         ->required(),
                                 ]),
-                            Forms\Components\Section::make('Success Metrics')
+                            Forms\Components\Section::make(__('Success Metrics'))
                                 ->schema([
                                     Forms\Components\KeyValue::make('kpi_targets')
                                         ->label(__('KPI Targets'))
-                                        ->keyLabel('Metric (e.g., Reach)')
-                                        ->valueLabel('Target (e.g., 10,000)')
+                                        ->keyLabel(__('Metric (e.g., Reach)'))
+                                        ->valueLabel(__('Target (e.g., 10,000)'))
                                         ->default(['Reach' => '10000', 'Leads' => '50']),
                                 ]),
                         ]),
@@ -190,12 +194,12 @@ class MarketingPlanResource extends Resource
                         ->icon('heroicon-m-bolt')
                         ->color('primary')
                         ->requiresConfirmation()
-                        ->modalHeading('AI Strategic Analysis')
-                        ->modalDescription('Hệ thống sẽ gửi toàn bộ dữ liệu Plan sang OpenAI (GPT-4) để phân tích. Quá trình này có thể mất 10-20 giây.')
+                        ->modalHeading(__('AI Strategic Analysis'))
+                        ->modalDescription(__('System will send all Plan data to OpenAI (GPT-4) for analysis. This process may take 10-20 seconds.'))
                         ->action(function (MarketingPlan $record) {
                             // 1. Kiểm tra dữ liệu đầu vào
                             if (empty($record->content_pillars)) {
-                                Notification::make()->title('Vui lòng nhập Content Pillars trước!')->warning()->send();
+                                Notification::make()->title(__('Please enter Content Pillars first!'))->warning()->send();
                                 return;
                             }
 
@@ -251,14 +255,14 @@ class MarketingPlanResource extends Resource
                                 ]);
 
                                 Notification::make()
-                                    ->title('AI Analysis Completed!')
+                                    ->title(__('AI Analysis Completed!'))
                                     ->success()
                                     ->send();
 
                             } catch (\Exception $e) {
                                 // Xử lý lỗi (VD: Hết tiền, sai Key, mất mạng)
                                 Notification::make()
-                                    ->title('AI Error')
+                                    ->title(__('AI Error'))
                                     ->body($e->getMessage())
                                     ->danger()
                                     ->send();
@@ -271,11 +275,11 @@ class MarketingPlanResource extends Resource
                             ->icon('heroicon-o-rocket-launch')
                             ->color('success')
                             ->requiresConfirmation()
-                            ->modalHeading('Deploy Plan')
-                            ->modalDescription('System will generate tailored content for each selected channel (Scripts for TikTok, Articles for Blog, etc).')
+                            ->modalHeading(__('Deploy Plan'))
+                            ->modalDescription(__('System will generate tailored content for each selected channel (Scripts for TikTok, Articles for Blog, etc).'))
                             ->action(function (MarketingPlan $record) {
                                 if (empty($record->content_pillars) || empty($record->channels)) {
-                                    Notification::make()->title('Missing Pillars or Channels!')->danger()->send();
+                                    Notification::make()->title(__('Missing Pillars or Channels!'))->danger()->send();
                                     return;
                                 }
                                 
@@ -305,7 +309,7 @@ class MarketingPlanResource extends Resource
                                         $count++;
                                     }
                                 }
-                                Notification::make()->title("Deployed {$count} content items across all channels!")->success()->send();
+                                Notification::make()->title(__('Deployed {count} content items across all channels!', ['count' => $count]))->success()->send();
                                 return redirect(request()->header('Referer'));
                             }),
                     ])

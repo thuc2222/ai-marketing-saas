@@ -29,10 +29,10 @@ class MySubscription extends Page
     public function upgradeAction(): Action
     {
         return Action::make('upgrade')
-            ->label('Pay Now')
-            ->modalHeading('Scan QR Code to Pay')
-            ->modalDescription('System will auto-activate your plan within 1-3 minutes after payment.')
-            ->modalSubmitActionLabel('I have completed the transfer')
+            ->label(__('Pay Now'))
+            ->modalHeading(__('Scan QR Code to Pay'))
+            ->modalDescription(__('System will auto-activate your plan within 1-3 minutes after payment.'))
+            ->modalSubmitActionLabel(__('I have completed the transfer'))
             ->modalContent(function (array $arguments) {
                 $plan = SubscriptionPlan::find($arguments['plan_id']);
                 $user = Auth::user();
@@ -54,7 +54,7 @@ class MySubscription extends Page
                 ]);
             })
             ->action(function () {
-                Notification::make()->title('Checking transaction status...')->success()->send();
+                Notification::make()->title(__('Checking transaction status...'))->success()->send();
                 return redirect(request()->header('Referer'));
             });
     }

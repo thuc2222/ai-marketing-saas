@@ -30,44 +30,44 @@ class SocialPostResource extends Resource
             ->schema([
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Section::make('Post Details')
+                        Forms\Components\Section::make(__('Post Details'))
                             ->schema([
                                 Forms\Components\Select::make('marketing_plan_id')
                                     ->relationship('marketingPlan', 'name')
-                                    ->label('Campaign / Plan')
+                                    ->label(__('Campaign / Plan'))
                                     ->required()
                                     ->searchable()
                                     ->preload(),
 
                                 Forms\Components\Grid::make(2)->schema([
                                     Forms\Components\TextInput::make('topic')
-                                        ->label('Topic / Theme')
+                                        ->label(__('Topic / Theme'))
                                         ->required()
                                         ->maxLength(255),
                                     
                                     Forms\Components\Select::make('platform')
-                                        ->label('Platform / Channel')
+                                        ->label(__('Platform / Channel'))
                                         ->options([
-                                            'facebook' => 'Facebook',
-                                            'instagram' => 'Instagram',
-                                            'tiktok' => 'TikTok (Video)',
-                                            'youtube_shorts' => 'YouTube Shorts',
-                                            'linkedin' => 'LinkedIn',
-                                            'website' => 'Website / Blog',
-                                            'email' => 'Email Newsletter',
+                                            'facebook' => __('Facebook'),
+                                            'instagram' => __('Instagram'),
+                                            'tiktok' => __('TikTok (Video)'),
+                                            'youtube_shorts' => __('YouTube Shorts'),
+                                            'linkedin' => __('LinkedIn'),
+                                            'website' => __('Website / Blog'),
+                                            'email' => __('Email Newsletter'),
                                         ])
                                         ->required()
                                         ->native(false),
                                 ]),
 
                                 Forms\Components\MarkdownEditor::make('content')
-                                    ->label('Content / Script')
+                                    ->label(__('Content / Script'))
                                     ->columnSpanFull()
                                     ->required()
                                     ->hintAction(
                                         // === AI AUTO WRITE ACTION ===
                                         Forms\Components\Actions\Action::make('ai_write')
-                                            ->label('✨ Auto-Write with AI')
+                                            ->label(__('✨ Auto-Write with AI'))
                                             ->requiresConfirmation()
                                             ->action(function (Forms\Get $get, Forms\Set $set) {
                                                 $topic = $get('topic');
@@ -75,7 +75,7 @@ class SocialPostResource extends Resource
                                                 $planId = $get('marketing_plan_id');
                                                 
                                                 if (!$topic || !$planId) {
-                                                    Notification::make()->title('Missing Topic or Campaign!')->warning()->send();
+                                                    Notification::make()->title(__('Missing Topic or Campaign!'))->warning()->send();
                                                     return;
                                                 }
 
@@ -90,9 +90,9 @@ class SocialPostResource extends Resource
                                                         ],
                                                     ]);
                                                     $set('content', $response->choices[0]->message->content);
-                                                    Notification::make()->title('AI Generated!')->success()->send();
+                                                    Notification::make()->title(__('AI Generated!'))->success()->send();
                                                 } catch (\Exception $e) {
-                                                    Notification::make()->title('Error: ' . $e->getMessage())->danger()->send();
+                                                    Notification::make()->title(__('Error: {message}', ['message' => $e->getMessage()]))->danger()->send();
                                                 }
                                             })
                                     ),
@@ -101,13 +101,13 @@ class SocialPostResource extends Resource
 
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Section::make('Status')
+                        Forms\Components\Section::make(__('Status'))
                             ->schema([
                                 Forms\Components\Select::make('status')
                                     ->options([
-                                        'draft' => 'Draft',
-                                        'scheduled' => 'Scheduled',
-                                        'published' => 'Published',
+                                        'draft' => __('Draft'),
+                                        'scheduled' => __('Scheduled'),
+                                        'published' => __('Published'),
                                     ])->default('draft'),
                             ]),
                     ])->columnSpan(1),
@@ -118,7 +118,7 @@ class SocialPostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('marketingPlan.name')->label('Campaign'),
+                Tables\Columns\TextColumn::make('marketingPlan.name')->label(__('Campaign')),
                 Tables\Columns\TextColumn::make('topic')->weight('bold'),
                 Tables\Columns\TextColumn::make('platform')->badge(),
                 // HIỂN THỊ TRẠNG THÁI VIDEO ĐỂ USER THEO DÕI
@@ -136,15 +136,15 @@ class SocialPostResource extends Resource
                 
                 // === ACTION BUILD VIDEO ĐÃ FIX LỖI ===
                 Tables\Actions\Action::make('build_video')
-                    ->label('Build AI Video')
+                    ->label(__('Build AI Video'))
                     ->icon('heroicon-o-video-camera')
                     ->color('success')
                     ->form([
                         Forms\Components\Select::make('video_type')
-                            ->label('Gói Video')
+                            ->label(__('Video Package'))
                             ->options([
-                                'social_short' => 'Social Short (Giá Rẻ)',
-                                'cinematic_pro' => 'Cinematic Pro (Cao Cấp)',
+                                'social_short' => __('Social Short (Budget)'),
+                                'cinematic_pro' => __('Cinematic Pro (Premium)'),
                             ])->required(),
                     ])
                     ->action(function (SocialPost $record, array $data, VideoFactoryService $service) {
@@ -153,7 +153,7 @@ class SocialPostResource extends Resource
                         $price = (int) $settings->{"price_{$data['video_type']}"}; // Lấy giá từ Settings
 
                         if ($user->credits < $price) {
-                            Notification::make()->title('Không đủ Credit!')->danger()->send();
+                            Notification::make()->title(__('Insufficient Credits!'))->danger()->send();
                             return;
                         }
 
@@ -167,7 +167,7 @@ class SocialPostResource extends Resource
                         $service->produceVideo($record, $data['video_type'], $settings);
 
                         Notification::make()
-                            ->title('Bắt đầu sản xuất Video!')
+                            ->title(__('Video production started!'))
                             ->success()
                             ->send();
                     })

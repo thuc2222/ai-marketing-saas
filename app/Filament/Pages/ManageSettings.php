@@ -84,17 +84,17 @@ class ManageSettings extends Page
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 TextInput::make('site_name')
-                                    ->label('Tên trang web')
+                                    ->label(__('Website Name'))
                                     ->required(),
                                 Grid::make(2)->schema([
                                     FileUpload::make('site_logo')
-                                        ->label('Logo thương hiệu')
+                                        ->label(__('Brand Logo'))
                                         ->image()
                                         ->directory('settings')
                                         ->visibility('public')
                                         ->columnSpan(1),
                                     ColorPicker::make('brand_color')
-                                        ->label('Màu chủ đạo')
+                                        ->label(__('Primary Color'))
                                         ->columnSpan(1),
                                 ]),
                             ]),
@@ -104,27 +104,30 @@ class ManageSettings extends Page
                             ->icon('heroicon-o-language')
                             ->schema([
                                 Select::make('default_language')
-                                    ->label('Ngôn ngữ mặc định')
-                                    ->options(['en' => 'English', 'vi' => 'Vietnamese']),
+                                    ->label(__('Default Language'))
+                                    ->options([
+                                        'en' => __('English'), 
+                                        'vi' => __('Vietnamese')
+                                    ]),
                                     
                                 Repeater::make('available_languages')
-                                    ->label('Ngôn ngữ hỗ trợ')
+                                    ->label(__('Supported Languages'))
                                     ->schema([
                                         Select::make('code')
-                                            ->label('Ngôn ngữ')
+                                            ->label(__('Language'))
                                             ->options([
-                                                'en' => 'English (Mỹ)',
-                                                'vi' => 'Tiếng Việt',
-                                                'ja' => 'Japanese (Nhật)',
-                                                'ko' => 'Korean (Hàn)',
+                                                'en' => __('English (US)'),
+                                                'vi' => __('Vietnamese'),
+                                                'ja' => __('Japanese'),
+                                                'ko' => __('Korean'),
                                             ])
                                             ->required(),
                                         TextInput::make('flag_icon')
-                                            ->label('File cờ (VD: vn.svg)')
+                                            ->label(__('Flag File (e.g., vn.svg)'))
                                             ->required(),
                                     ])
                                     ->grid(2)
-                                    ->addActionLabel('Thêm ngôn ngữ')
+                                    ->addActionLabel(__('Add Language'))
                                     ->defaultItems(1),
                             ]),
 
@@ -133,25 +136,25 @@ class ManageSettings extends Page
                             ->icon('heroicon-o-banknotes')
                             ->schema([
                                 Repeater::make('supported_currencies')
-                                    ->label('Đơn vị tiền tệ')
+                                    ->label(__('Currency Units'))
                                     ->schema([
                                         TextInput::make('code')
-                                            ->label('Mã (USD, VND)')
+                                            ->label(__('Code (USD, VND)'))
                                             ->required()
                                             ->extraInputAttributes(['style' => 'text-transform: uppercase'])
                                             ->dehydrateStateUsing(fn (string $state): string => strtoupper($state)),
                                             
                                         TextInput::make('symbol')
-                                            ->label('Ký hiệu ($, ₫)')
+                                            ->label(__('Symbol ($, ₫)'))
                                             ->required(),
                                         TextInput::make('rate_per_credit')
-                                            ->label('Giá trị 1 Credit')
+                                            ->label(__('Value per Credit'))
                                             ->numeric()
                                             ->prefix('1 Credit =')
                                             ->required(),
                                     ])
                                     ->columns(3)
-                                    ->addActionLabel('Thêm tiền tệ')
+                                    ->addActionLabel(__('Add Currency'))
                                     ->defaultItems(1),
                             ]),
 
@@ -160,54 +163,54 @@ class ManageSettings extends Page
                             ->icon('heroicon-o-key')
                             ->schema([
                                 // 1. AI Core
-                                Section::make('Core AI')
-                                    ->description('Cấu hình OpenAI để tạo kịch bản và nội dung.')
+                                Section::make(__('Core AI'))
+                                    ->description(__('Configure OpenAI for script and content generation.'))
                                     ->schema([
                                         TextInput::make('openai_api_key')
-                                            ->label('OpenAI Secret Key')
+                                            ->label(__('OpenAI Secret Key'))
                                             ->password()
                                             ->revealable()
                                             ->required(),
                                     ]),
 
                                 // 2. Video Generation AI
-                                Section::make('Video Generators')
-                                    ->description('API cho Replicate (Luma/Sora) và Kling AI.')
+                                Section::make(__('Video Generators'))
+                                    ->description(__('API for Replicate (Luma/Sora) and Kling AI.'))
                                     ->schema([
                                         TextInput::make('replicate_api_token')
-                                            ->label('Replicate API Token')
+                                            ->label(__('Replicate API Token'))
                                             ->password()
                                             ->revealable(),
                                         Grid::make(2)->schema([
                                             TextInput::make('kling_access_key')
-                                                ->label('Kling Access Key'),
+                                                ->label(__('Kling Access Key')),
                                             TextInput::make('kling_secret_key')
-                                                ->label('Kling Secret Key')
+                                                ->label(__('Kling Secret Key'))
                                                 ->password()
                                                 ->revealable(),
                                         ]),
                                     ])->collapsed(),
 
                                 // 3. Social Media
-                                Section::make('Social Media Apps')
-                                    ->description('Kết nối TikTok, Facebook để đăng bài tự động.')
+                                Section::make(__('Social Media Apps'))
+                                    ->description(__('Connect TikTok, Facebook for automatic posting.'))
                                     ->schema([
                                         Grid::make(2)->schema([
-                                            TextInput::make('tiktok_client_key')->label('TikTok Client Key'),
-                                            TextInput::make('tiktok_client_secret')->label('TikTok Secret')->password(),
+                                            TextInput::make('tiktok_client_key')->label(__('TikTok Client Key')),
+                                            TextInput::make('tiktok_client_secret')->label(__('TikTok Secret'))->password(),
                                         ]),
                                         Grid::make(2)->schema([
-                                            TextInput::make('facebook_app_id')->label('Facebook App ID'),
-                                            TextInput::make('facebook_app_secret')->label('Facebook App Secret')->password(),
+                                            TextInput::make('facebook_app_id')->label(__('Facebook App ID')),
+                                            TextInput::make('facebook_app_secret')->label(__('Facebook App Secret'))->password(),
                                         ]),
                                     ])->collapsed(),
 
                                 // 4. Payment Gateway
-                                Section::make('Payment Gateway (Stripe)')
-                                    ->description('Cấu hình thanh toán để nạp Credits.')
+                                Section::make(__('Payment Gateway (Stripe)'))
+                                    ->description(__('Configure payment for Credits top-up.'))
                                     ->schema([
-                                        TextInput::make('stripe_public_key')->label('Stripe Public Key'),
-                                        TextInput::make('stripe_secret_key')->label('Stripe Secret Key')->password()->revealable(),
+                                        TextInput::make('stripe_public_key')->label(__('Stripe Public Key')),
+                                        TextInput::make('stripe_secret_key')->label(__('Stripe Secret Key'))->password()->revealable(),
                                     ])->collapsed(),
                             ]),
 
@@ -272,7 +275,7 @@ class ManageSettings extends Page
         $settings->save();
 
         Notification::make() 
-            ->title('Đã lưu cấu hình hệ thống!')
+            ->title(__('System configuration saved!'))
             ->success()
             ->send();
     }

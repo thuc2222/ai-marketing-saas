@@ -21,19 +21,19 @@ class DashboardStatsOverview extends BaseWidget
         }
 
         return [
-            Stat::make('Total Posts', $query->count())
-                ->description('AI Generated Posts')
+            Stat::make(__('Total Posts'), $query->count())
+                ->description(__('AI Generated Posts'))
                 ->descriptionIcon('heroicon-m-document-text')
                 ->chart([7, 3, 10, 5, 15, 8, 20]) // Chart giả lập cho đẹp
                 ->color('primary'),
 
-            Stat::make('Total Views', $query->sum('views_count'))
-                ->description('Across all platforms')
+            Stat::make(__('Total Views'), $query->sum('views_count'))
+                ->description(__('Across all platforms'))
                 ->descriptionIcon('heroicon-m-eye')
                 ->color('success'),
 
-            Stat::make('Total Engagement', $query->sum('likes_count') + $query->sum('comments_count'))
-                ->description('Likes + Comments')
+            Stat::make(__('Total Engagement'), $query->sum('likes_count') + $query->sum('comments_count'))
+                ->description(__('Likes + Comments'))
                 ->descriptionIcon('heroicon-m-heart')
                 ->color('danger'),
         ];
